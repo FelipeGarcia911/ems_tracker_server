@@ -1,0 +1,104 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.socket.io/socket.io-1.7.3.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <script src="js/main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgodg-yNFr9DyDab2a8sNWoKpKzQ5JUFI&amp;callback=initGoogleMap" async="" defer=""></script>
+  </head><body>
+    <div class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand">EMS Tracker</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="home"><i class="fa fa-fw fa-home"></i>Home</a>
+            </li>
+            <li class="active">
+              <a href="main"><i class="fa fa-fw fa-automobile"></i>&nbsp;Aplicación Web<br></a>
+            </li>
+            <li>
+              <a href="about"><i class="fa fa-fw fa-info-circle"></i>Acerce de<br></a>
+            </li>
+          </ul>
+          <p class="navbar-text navbar-right">Un producto de
+            <a href="#" class="navbar-link">CODIGORIGINAL</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="progress" id="progressBar">
+              <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 60%;">60% Complete</div>
+            </div>
+            <div class="col-md-12" id="googleMap" style="height: 400px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <a class="btn btn-block btn-lg btn-primary" id="generalTack"><i class="fa fa-fw fa-signal"></i>Rastreo General</a>
+          </div>
+          <div class="col-md-6">
+            <a class="btn btn-block btn-lg btn-primary" id="specificTrack"><i class="fa fa-fw fa-bus"></i>Rastreo Específico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8"></div>
+          <div class="col-md-4">
+            <a class="btn btn-block btn-lg btn-primary"><i class="fa fa-fw fa-search"></i>Buscar<br></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="section section-primary">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6">
+            <h1 class="text-left">
+              <i class="fa fa-fw fa-desktop"></i>&nbsp;Codigo Original S.A.S</h1>
+            <p>Desarrollo de Aplicaciones de Alto Rendimiento</p>
+          </div>
+          <div class="col-sm-6">
+            <p class="text-info text-right">
+              <br>
+              <br>
+            </p>
+            <div class="row">
+              <div class="col-md-12 hidden-lg hidden-md hidden-sm text-left">
+                <a href="#"><i class="fa fa-3x fa-fw fa-instagram text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-twitter text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-facebook text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-github text-inverse"></i></a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 hidden-xs text-right">
+                <a href="#"><i class="fa fa-3x fa-fw fa-instagram text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-twitter text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-facebook text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-github text-inverse"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  
+
+</body></html>

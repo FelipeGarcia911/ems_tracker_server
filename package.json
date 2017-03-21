@@ -1,0 +1,27 @@
+{
+  "name": "ems_tracker",
+  "version": "1.0.0",
+  "description": "Server of EMS Tracker Application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "socket.io": "latest",
+    "express": "latest",
+    "http": "latest",
+    "async": "latest",
+    "body-parser": "latest",
+    "mongodb": "latest",
+    "node-import": "latest",
+    "mongoose": "latest",
+    "method-override": "latest"
+  },
+  "keywords": [
+    "nodejs",
+    "gps"
+  ],
+  "author": "Felipe Garcia",
+  "license": "ISC"
+}
