@@ -48,7 +48,7 @@ var socket_route = require('./app/controllers/socket')(io);
 // --------------------------------------------------- API Routes ----------------------------------------------------
 // Import Models and Controllers
 // -------------------------------------------------------------------------------------------------------------------
-var vehicleModel        = require('./app/models/vehicle')(app, mongoose);
+var vehicleModel        = require('./app/models/vehicle')(mongoose);
 var VehicleController   = require('./app/controllers/vehicles');
 // -------------------------------------------------------------------------------------------------------------------
 

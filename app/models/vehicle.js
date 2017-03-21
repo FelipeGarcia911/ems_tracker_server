@@ -1,4 +1,4 @@
-module.exports = function(app, mongoose) {
+module.exports = function(mongoose) {
 
     var vehicleSchema = new mongoose.Schema({
         id: 		    { type: Number },
