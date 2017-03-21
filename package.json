@@ -16,7 +16,8 @@
     "mongodb": "latest",
     "node-import": "latest",
     "mongoose": "latest",
-    "method-override": "latest"
+    "method-override": "latest",
+    "forever" : "latest"
   },
   "keywords": [
     "nodejs",
