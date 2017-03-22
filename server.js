@@ -52,14 +52,14 @@ var socket_route = require('./app/controllers/socket')(io);
 // --------------------------------------------------- API Routes ----------------------------------------------------
 // Import Models and Controllers
 // -------------------------------------------------------------------------------------------------------------------
-//var vehicleModel        = require('./app/models/vehicle')(mongoose);
-//var VehicleController   = require('./app/controllers/vehicles');
+var vehicleModel        = require('./app/models/vehicle')(mongoose);
+var VehicleController   = require('./app/controllers/vehicles');
 // -------------------------------------------------------------------------------------------------------------------
 
 // API - Route
 // -------------------------------------------------------------------------------------------------------------------
-//var vehicle_routes = require('./app/routers/vehicles')(express, VehicleController);
-//app.use('/api', vehicle_routes);
+var vehicle_routes = require('./app/routers/vehicles')(express, VehicleController);
+app.use('/api', vehicle_routes);
 // -------------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------------
