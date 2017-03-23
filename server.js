@@ -30,6 +30,7 @@ mongoose = mongoose.connect(constants.MONGO_DB_URI_01, function(err, res) {
 // App Configurations
 // -------------------------------------------------------------------------------------------------------------------
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/images', express.static(__dirname + '/public/web/images'));
 app.use('/css', express.static(__dirname + '/public/web/css'));
 app.use('/js', express.static(__dirname + '/public/web/js'));
 app.use(bodyParser.json());
