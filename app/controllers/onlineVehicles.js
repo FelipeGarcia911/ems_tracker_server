@@ -18,6 +18,7 @@ exports.processGetAllOnlineVehiclesPosition = function () {
 
 // Update the Vehicle Position
 exports.processUpdateVehiclePosition = function (data,socketId) {
+    console.log('Update',data);
     var id          = data.id;
     var latitude    = data.latitude;
     var longitude   = data.longitude;
