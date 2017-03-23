@@ -11,7 +11,6 @@ module.exports = function(io){
         });
 
         socket.on(constants.UPDATE_VEHICLE_POSITION_REQUEST,function(data){
-            console.log('Update',data);
             var messageData = data.data;
             var response = onlineVehiclesController.processUpdateVehiclePosition(messageData,socket.id);
             io.sockets.connected[socket.id].emit(constants.UPDATE_VEHICLE_POSITION_RESPONSE,response);
