@@ -17,7 +17,8 @@
     "node-import": "latest",
     "mongoose": "latest",
     "method-override": "latest",
-    "forever" : "latest"
+    "forever" : "latest",
+    "node-promise": "latest"
   },
   "keywords": [
     "nodejs",

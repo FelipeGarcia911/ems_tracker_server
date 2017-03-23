@@ -11,5 +11,9 @@ module.exports = function(express, VehicleController){
         .put(VehicleController.updateVehicle)
         .delete(VehicleController.deleteVehicle);
 
+    app.route('/vehicles/login')
+        .post(VehicleController.loginVehicle);
+
+
     return app;
 };

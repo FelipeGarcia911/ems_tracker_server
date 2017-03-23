@@ -1,6 +1,6 @@
 var constants         = require('../constants');
-var OnlineVehicleObj  = require('../models/OnlineVehicleObj');
-var SocketResponseObj =  require('../models/SocketMessageObj');
+var OnlineVehicleObj  = require('../objects/OnlineVehicleObj');
+var SocketResponseObj = require('../objects/SocketMessageObj');
 
 var onlineVehicles = [];
 
