@@ -1,5 +1,5 @@
-var mongoDbDatabase   = 'mongodb-ems-tracker-server@admin';
-var mongoDbPassword   = 'UkyykaEHl3VIf4qq';
+var mongoDB_01_User = 'admin';
+var mongoDB_01_Pass = 'ems_tracker';
 
 module.exports = {
 
@@ -16,6 +16,5 @@ module.exports = {
     FAIL_STATUS : 400,
 
     //MongoDB Constants
-    MONGO_DB_URI : 'mongodb://mongodb-ems-tracker-server:'+mongoDbPassword+'@mongodb-ems-tracker-server-shard-00-00-78jlx.mongodb.net:27017,mongodb-ems-tracker-server-shard-00-01-78jlx.mongodb.net:27017,mongodb-ems-tracker-server-shard-00-02-78jlx.mongodb.net:27017/'+mongoDbDatabase+'?ssl=true&replicaSet=mongodb-ems-tracker-server-shard-0&authSource=admin',
-
+    MONGO_DB_URI_01 : "mongodb://"+mongoDB_01_User+":"+mongoDB_01_Pass+"@ds060369.mlab.com:60369/ems_tracker_vehicles",
 };

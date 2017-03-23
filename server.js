@@ -4,7 +4,6 @@ var constants       = require('./app/constants');
 var bodyParser      = require('body-parser');
 
 var mongoose        = require('mongoose');
-var mongoClient     = require('mongodb').MongoClient;
 
 var methodOverride  = require("method-override");
 var path            = require('path');
@@ -18,14 +17,13 @@ var io      = require('socket.io')(http);
 // Variables
 // -------------------------------------------------------------------------------------------------------------------
 var port    = process.env.PORT || 3000;
-var dbName  = 'vehicles';
 // -------------------------------------------------------------------------------------------------------------------
 
 //Connection to DB
 // -------------------------------------------------------------------------------------------------------------------
-mongoClient.connect(constants.MONGO_DB_URI, function(err, res) {
+mongoose = mongoose.connect(constants.MONGO_DB_URI_01, function(err, res) {
     if(err) throw err;
-    console.log('Connected to Database');
+    console.log('Connected to Database ');
 });
 // -------------------------------------------------------------------------------------------------------------------
 
