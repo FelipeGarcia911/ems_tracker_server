@@ -1,5 +1,5 @@
 var ADMIN_COOKIE_DAYS = 15;
-var ADMIN_COOKIE_SEG  = 30;
+var ADMIN_COOKIE_SEG  = 15;
 
 var constants = {
     ADMIN_COOKIE_NAME           : 'adminCookie',

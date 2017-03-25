@@ -1,0 +1,144 @@
+{
+	"variables": [],
+	"info": {
+		"name": "EMS_Tracker",
+		"_postman_id": "064c72d6-8a19-e578-3a02-01e968b4fb33",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Vehicles Data",
+			"request": {
+				"url": "http://localhost:3000/api/vehicles",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"LOST\",\n  \"year\": 2004,\n  \"country\": \"USA\",\n  \"poster\": \"http://ia.media-imdb.com/images/M/MV5BMjA3NzMyMzU1MV5BMl5BanBnXkFtZTcwNjc1ODUwMg@@._V1_SY317_CR17,0,214,317_.jpg\",\n  \"seasons\": 6,\n  \"genre\": \"Sci-Fi\",\n  \"summary\": \"The survivors of a plane crash are forced to live with each other on a remote island, a dangerous new world that poses unique threats of its own.\"\n}"
+				},
+				"description": "Get All Vehicles Dat"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Vehicle",
+			"request": {
+				"url": "http://localhost:3000/api/vehicles",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user\"\t\t: \"vehicle_user_5\",\n  \"password\"\t: \"vehicle_password\",\n  \"name\"\t\t: \"Vehicle Name\",\n  \"description\"\t: \"Vehicle Description\"\n}"
+				},
+				"description": "Add Vehicle to List"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Vehicle Data by MongoDB Id",
+			"request": {
+				"url": "http://localhost:3000/api/vehicles/58d3f0a6d5b6083b61e5f1f0",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Vehicle by MongoDb Id",
+			"request": {
+				"url": "http://localhost:3000/api/vehicles/58d36866927ebe284d7ed7fa",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Login Vehicle",
+			"request": {
+				"url": "http://localhost:3000/api/vehicles/login/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user\"\t: \"vehicle_user\",\n  \"password\": \"vehicle_password\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Admins Data",
+			"request": {
+				"url": "http://localhost:3000/api/admin",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add Admin",
+			"request": {
+				"url": "http://localhost:3000/api/admin",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user\"\t\t: \"admin_user\",\n  \"password\"\t: \"admin_password\",\n  \"name\"\t\t: \"Admin Name\",\n  \"description\"\t: \"Admin Description\"\n}"
+				},
+				"description": "Add Admin to List"
+			},
+			"response": []
+		},
+		{
+			"name": "Login Admin",
+			"request": {
+				"url": "http://localhost:3000/api/admin/login/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user\"\t: \"admin_user\",\n  \"password\": \"admin_password\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
