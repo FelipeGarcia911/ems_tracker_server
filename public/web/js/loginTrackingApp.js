@@ -86,7 +86,6 @@ function hideBody() {
 //Presenter Functions
 //----------------------------------------------------------------------------------------------------------------------
 function onDocumentReady() {
-    deleteCookie(constants.ADMIN_COOKIE_NAME);
     if(checkUserAuth()){
         hideBody();
         navigateToWebApp();
@@ -118,6 +117,7 @@ function navigateToWebApp() {
 }
 
 function onSuccessLogin() {
+    hideProgressBar();
     navigateToWebApp();
 }
 
@@ -155,8 +155,10 @@ function onLoginSuccessResponse(data, rememberMe) {
         var adminData = data.data;
         if (rememberMe){
             saveAdminCookie(adminData);
+            console.log("Remember");
         }else{
-            saveTempCookie(adminData);
+            saveAdminTempCookie(adminData);
+            console.log("Temp");
         }
         onSuccessLogin();
     }else if (status === constants.FAILURE_STATUS){
@@ -189,7 +191,7 @@ function saveAdminCookie(adminData) {
     setCookie(constants.ADMIN_COOKIE_NAME, adminCookie, constants.ADMIN_COOKIE_REMEMBER_TIME);
 }
 
-function saveTempCookie(adminData) {
+function saveAdminTempCookie(adminData) {
     var adminId = adminData._id;
     var adminToken = adminData._id;
     var adminCookie = createJSONToAdminCookie(adminId, adminToken);
