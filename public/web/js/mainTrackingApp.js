@@ -59,7 +59,7 @@ function onDocumentReady() {
         showBody();
         initSocketConnection();
         initAdminLocation();
-        initVehicleSimulation();
+        //initVehicleSimulation();
     }else {
         hideBody();
         navigateToLogin()
@@ -143,17 +143,35 @@ function onOnlineVehiclesResponse(data) {
     var responseData = data.data;
     var onlineVehiclesCount = responseData.onlineCount;
     var onlineVehicleArray = responseData.vehiclesData;
+    console.log(onlineVehicleArray);
     onlineVehicleArray.forEach(function (vehicle,index) {
         var newVehicle = createOnlineVehicle(vehicle.id, vehicle.latitude, vehicle.longitude,gMap);
         var isUpdated = updateOnlineVehicle(newVehicle);
         if (!isUpdated){
             addOnlineVehicle(newVehicle);
             newVehicle.showMarker();
-            console.log("added!");
-        }else{
-            console.log("updated!");
         }
     });
+    updateLocalVehicles(onlineVehicleArray);
+}
+
+function updateLocalVehicles(onlineVehicleArray){
+    onlineVehicles.forEach(function (vehicle,index) {
+        var inArray = isVehicleInArray(onlineVehicleArray, vehicle.id);
+        if (!inArray) {
+            deleteOnlineVehicle(vehicle.id);
+        }
+    });
+}
+
+function isVehicleInArray(vehicleArray, vehicleId) {
+    var isExecuted = false;
+    vehicleArray.forEach(function (vehicle, index) {
+        if (vehicle.id === vehicleId) {
+            isExecuted = true;
+        }
+    });
+    return isExecuted;
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -217,8 +235,9 @@ function addOnlineVehicle(onlineVehicle) {
 }
 
 function deleteOnlineVehicle(id) {
-    onlineVehicles.forEach(function (index,onlineVehicle) {
-        if (onlineVehicle.getId() === id){
+    onlineVehicles.forEach(function (index, onlineVehicle) {
+        if (onlineVehicle.id === id){
+            onlineVehicle.hideMarker();
             onlineVehicles.splice(index,1);
         }
     });
