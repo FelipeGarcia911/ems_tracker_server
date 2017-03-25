@@ -1,6 +1,6 @@
 var mongoose        = require('mongoose');
 var Vehicle         = mongoose.model('Vehicle');
-var ApiResponseObj  = require('../objects/ApiResponseObj');
+var ApiResponseObj  = require('../../objects/ApiResponseObj');
 
 //GET - Login in the Database
 exports.loginVehicle = function (req, res) {

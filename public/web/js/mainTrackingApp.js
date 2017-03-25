@@ -14,7 +14,7 @@ var constants = {
     GET_ALL_ONLINE_VEHICLE_POSITIONS_RESPONSE : "GET_ALL_ONLINE_VEHICLE_POSITIONS_RESPONSE",
     OK_STATUS   : 200,
     FAIL_STATUS : 400,
-    ADMIN_TOKEN : "DFVDF7DVF8VD8VV7SDYVS8D7YVS"
+    ADMIN_COOKIE_NAME : 'adminCookie',
 };
 //--------------------------------------------------------------------------------------------------
 
@@ -25,10 +25,6 @@ var constants = {
 
 //Init Script Functions
 //--------------------------------------------------------------------------------------------------
-initScript();
-//--------------------------------------------------------------------------------------------------
-
-// Inicialización de GoogleMaps
 function initGoogleMap() {
     var mapProp = {
         center : new google.maps.LatLng(0.0,0.0),
@@ -36,25 +32,64 @@ function initGoogleMap() {
     };
     gMap= new google.maps.Map(document.getElementById("googleMap"),mapProp);
 }
-
 // -------------------------------------------------------------------------------------
-function initScript(){
-    initSocketConnection();
-    initVehicleSimulation();
-    initAdminLocation();
+
+//Presenter Functions
+//--------------------------------------------------------------------------------------------------
+$( document ).ready(function() {
+    onDocumentReady();
+
+    $('#navSignOut').click(function () {
+        onNavSignOutButtonClick();
+    });
+});
+
+function showBody() {
+    $('body').show();
 }
 
+function hideBody() {
+    $('body').hide();
+}
+
+//Controller Functions
+//--------------------------------------------------------------------------------------------------
+function onDocumentReady() {
+    if (checkUserAuth()){
+        showBody();
+        initSocketConnection();
+        initAdminLocation();
+        initVehicleSimulation();
+    }else {
+        hideBody();
+        navigateToLogin()
+    }
+}
+
+function onNavSignOutButtonClick() {
+    deleteCookie(constants.ADMIN_COOKIE_NAME);
+    navigateToLogin();
+}
+
+function navigateToLogin() {
+    window.location.href = 'loginTrackingApp';
+}
+
+function checkUserAuth() {
+    return checkCookie(constants.ADMIN_COOKIE_NAME);
+}
+
+//--------------------------------------------------------------------------------------------------
+
+// Socket Functions
+//--------------------------------------------------------------------------------------------------
 function initSocketConnection(){
     socket = io();
     socket.on('new_message', function(msg){
         alert(msg);
     });
 }
-// -------------------------------------------------------------------------------------
 
-
-// Socket Functions
-//--------------------------------------------------------------------------------------------------
 function sendSocketMessage(method,data) {
     if (socket !== null){
         socket.emit(method,data);
@@ -62,6 +97,21 @@ function sendSocketMessage(method,data) {
     }else{
         return false;
     }
+}
+
+function newSocketMessage(method, data, status) {
+    var socketMessageTemplate = {
+        method: method,
+        data: data,
+        message: 'Response from WebApp',
+        status: status,
+        errorCode: '',
+        errorMessage: '',
+        setData: function (data) {
+            this.data = data;
+        }
+    };
+    return socketMessageTemplate;
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -160,30 +210,6 @@ function getCurrentLatLonPosition() {
 }
 //--------------------------------------------------------------------------------------------------
 
-// Other Functions
-//--------------------------------------------------------------------------------------------------
-
-function randomInRange(min, max) {
-    return Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min);
-}
-
-function newSocketMessage(method, data, status) {
-
-    var socketMessageTemplate = {
-        method: method,
-        data: data,
-        message: 'Response from WebApp',
-        status: status,
-        errorCode: '',
-        errorMessage: '',
-        setData: function (data) {
-            this.data = data;
-        }
-    };
-
-    return socketMessageTemplate;
-}
-
 // Online Vehicles Functions
 //--------------------------------------------------------------------------------------------------
 function addOnlineVehicle(onlineVehicle) {
@@ -251,6 +277,36 @@ function createMarker(position, title) {
     return marker;
 }
 
+//--------------------------------------------------------------------------------------------------
 
+// Other Functions
+//--------------------------------------------------------------------------------------------------
+function checkCookie(cname) {
+    var cookie = getCookie(cname);
+    return cookie !== "";
+}
+
+function getCookie(cname) {
+    var name = cname + '=';
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function deleteCookie(cname) {
+    document.cookie = cname + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function randomInRange(min, max) {
+    return Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min);
+}
 //--------------------------------------------------------------------------------------------------
 

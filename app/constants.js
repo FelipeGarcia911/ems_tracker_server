@@ -15,6 +15,10 @@ module.exports = {
     OK_STATUS   : 200,
     FAIL_STATUS : 400,
 
+    // Vehicle Status
+    ONLINE_STATUS  : 'ONLINE',
+    OFFLINE_STATUS : 'OFFLINE',
+
     //MongoDB Constants
     MONGO_DB_URI_01 : "mongodb://"+mongoDB_01_User+":"+mongoDB_01_Pass+"@ds060369.mlab.com:60369/ems_tracker_vehicles",
 };

@@ -1,5 +1,5 @@
-var constants                = require('../constants');
-var onlineVehiclesController = require('./onlineVehicles');
+var constants                = require('../../constants');
+var onlineVehiclesController = require('./OnlineVehiclesSocketController');
 
 module.exports = function(io){
 
@@ -17,18 +17,10 @@ module.exports = function(io){
         });
 
         socket.on('disconnect',function () {
-            handleUserDisconnected();
+            var response = onlineVehiclesController.handleVehicleDisconnect(socket.id);
         });
 
     });
-
-    function handleUserConnected(socketId) {
-
-    }
-
-    function handleUserDisconnected(socketId) {
-
-    }
 
     return io;
 

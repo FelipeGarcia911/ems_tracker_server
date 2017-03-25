@@ -1,6 +1,6 @@
-var constants         = require('../constants');
-var OnlineVehicleObj  = require('../objects/OnlineVehicleObj');
-var SocketResponseObj = require('../objects/SocketMessageObj');
+var constants         = require('../../constants');
+var OnlineVehicleObj  = require('../../objects/OnlineVehicleObj');
+var SocketResponseObj = require('../../objects/SocketMessageObj');
 
 var onlineVehicles = [];
 
@@ -17,12 +17,13 @@ exports.processGetAllOnlineVehiclesPosition = function () {
 };
 
 // Update the Vehicle Position
-exports.processUpdateVehiclePosition = function (data,socketId) {
+exports.processUpdateVehiclePosition = function (data, socketId) {
     var id          = data.id;
     var latitude    = data.latitude;
     var longitude   = data.longitude;
+    var status      = constants.ONLINE_STATUS;
 
-    var onlineVehicleData = createOnlineVehicle(id,latitude,longitude,socketId);
+    var onlineVehicleData = createOnlineVehicle(id,latitude,longitude,socketId,status);
     var isUpdated = updateOnlineVehicle(onlineVehicleData);
     if (!isUpdated){
         addOnlineVehicle(onlineVehicleData);
@@ -33,10 +34,12 @@ exports.processUpdateVehiclePosition = function (data,socketId) {
 };
 
 exports.handleVehicleDisconnect = function (socketId) {
-    var onlineVehicle = findOnlineVehicleBySocketId(socketId);
-    if (onlineVehicle !== false){
-        removeOnlineVehicle(onlineVehicle);
+    var isExecuted = false;
+    var vehicleId = getVehicleIdBySocketId(socketId);
+    if (vehicleId !== false){
+        isExecuted = removeOnlineVehicle(vehicleId);
     }
+    return isExecuted;
 };
 // ----------------------------------------------------------------------------------------------------------------
 
@@ -45,11 +48,14 @@ function addOnlineVehicle(onlineVehicle) {
 }
 
 function removeOnlineVehicle(id) {
-    onlineVehicles.forEach(function (index,onlineVehicle) {
+    var isExecuted = false;
+    onlineVehicles.forEach(function (onlineVehicle,index) {
         if (onlineVehicle.getId() === id){
             onlineVehicles.splice(index,1);
+            isExecuted = true;
         }
     });
+    return isExecuted;
 }
 
 function updateOnlineVehicle(vehicleData) {
@@ -63,14 +69,14 @@ function updateOnlineVehicle(vehicleData) {
     return isExecuted;
 }
 
-function createOnlineVehicle(id, latitude, longitude,socketId) {
-    var response = new OnlineVehicleObj(id,latitude,longitude,socketId);
+function createOnlineVehicle(id, latitude, longitude,socketId, status) {
+    var response = new OnlineVehicleObj(id,latitude,longitude,socketId, status);
     return response;
 }
 
-function findOnlineVehicleBySocketId(socketId) {
+function getVehicleIdBySocketId(socketId) {
     var isExecuted = false;
-    onlineVehicles.forEach(function (index,onlineVehicle) {
+    onlineVehicles.forEach(function (onlineVehicle,index) {
         if (onlineVehicle.getSocketId() === socketId){
             isExecuted = onlineVehicle.getId();
         }

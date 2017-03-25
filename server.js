@@ -39,26 +39,32 @@ app.use(methodOverride());
 
 // Index - Route
 // -------------------------------------------------------------------------------------------------------------------
-var web_page_routes = require('./app/routers/webpage')(express, path);
+var web_page_routes = require('./app/routers/WebAppRouter')(express, path);
 app.use('/', web_page_routes);
 // -------------------------------------------------------------------------------------------------------------------
 
 // Socket - Route
 // -------------------------------------------------------------------------------------------------------------------
-var socket_route = require('./app/controllers/socket')(io);
+var socket_route = require('./app/controllers/socket/SocketIOController')(io);
 // -------------------------------------------------------------------------------------------------------------------
 
 // --------------------------------------------------- API Routes ----------------------------------------------------
 // Import Models and Controllers
 // -------------------------------------------------------------------------------------------------------------------
 var vehicleModel        = require('./app/models/vehicle')(mongoose);
-var VehicleController   = require('./app/controllers/vehicles');
+var VehicleController   = require('./app/controllers/api/VehiclesApiController');
+
+var adminModel        = require('./app/models/admin')(mongoose);
+var AdminController   = require('./app/controllers/api/AdminApiController');
 // -------------------------------------------------------------------------------------------------------------------
 
 // API - Route
 // -------------------------------------------------------------------------------------------------------------------
-var vehicle_routes = require('./app/routers/vehicles')(express, VehicleController);
+var vehicle_routes = require('./app/routers/VehicleRouter')(express, VehicleController);
 app.use('/api', vehicle_routes);
+
+var admin_routes = require('./app/routers/AdminRouter')(express, AdminController);
+app.use('/api', admin_routes);
 // -------------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------------
