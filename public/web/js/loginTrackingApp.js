@@ -6,7 +6,7 @@ var constants = {
     ADMIN_COOKIE_REMEMBER_TIME  : (ADMIN_COOKIE_DAYS * 24 * 60 * 60 * 1000),
     ADMIN_COOKIE_TEMP_TIME      : (ADMIN_COOKIE_SEG * 1000),
 
-    URL_SERVER                  : 'http://localhost:3000/api/',
+    URL_SERVER                  : './api/',
 
     // Api Methods
     LOGIN_ADMIN     : 'admin/login/',
@@ -103,7 +103,6 @@ function onLoginAction() {
     var username = getUserName();
     var password = getUserPassword();
     var rememberMe = getRememberMe();
-    console.log(rememberMe);
 
     if ( isValidString(username) && isValidString(password)){
         hideAlertDialog();
@@ -144,6 +143,7 @@ function doLogin(username, password, rememberMe) {
             onLoginSuccessResponse(data, rememberMe);
         },
         error: function (jqXHR, textStatus, errorThrown){
+            console.log(jqXHR, textStatus, errorThrown);
             onLoginFailureResponse(errorThrown);
         }
     });
