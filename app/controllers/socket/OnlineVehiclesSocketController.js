@@ -22,7 +22,7 @@ exports.processUpdateVehiclePosition = function (data, socketId) {
     var latitude    = data.latitude;
     var longitude   = data.longitude;
     var status      = constants.ONLINE_STATUS;
-
+    console.log(data);
     var onlineVehicleData = createOnlineVehicle(id,latitude,longitude,socketId,status);
     var isUpdated = updateOnlineVehicle(onlineVehicleData);
     if (!isUpdated){

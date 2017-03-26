@@ -191,9 +191,10 @@ function onOnlineVehiclesResponse(data) {
 
 function updateLocalVehicles(onlineVehicleArray){
     onlineVehicles.forEach(function (vehicle,index) {
-        var inArray = isVehicleInArray(onlineVehicleArray, vehicle.id);
+        var inArray = isVehicleInArray(onlineVehicleArray, vehicle.getId());
         if (!inArray) {
-            deleteOnlineVehicle(vehicle.id);
+        	console.log('Not Found!');
+            deleteOnlineVehicle(vehicle.getId());
         }
     });
 }
@@ -216,10 +217,7 @@ function initVehicleSimulation() {
     var updateInterval = 2000;
 
     setInterval(function () {
-        var vehicleId = '58d403a44add1048224ea005';
-        var currentLatLong = getCurrentLatLonPosition();
-        updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
-
+        
         var vehicleId = '58d403b94add1048224ea006';
         var currentLatLong = getCurrentLatLonPosition();
         updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
@@ -260,10 +258,11 @@ function addOnlineVehicle(onlineVehicle) {
 }
 
 function deleteOnlineVehicle(id) {
-    onlineVehicles.forEach(function (index, onlineVehicle) {
-        if (onlineVehicle.id === id){
+    onlineVehicles.forEach(function (onlineVehicle, index) {
+        if (onlineVehicle.getId() === id){
             onlineVehicle.hideMarker();
             onlineVehicles.splice(index,1);
+            console.log("DeleteVehicle",onlineVehicle.id);
         }
     });
 }
@@ -320,7 +319,7 @@ function createMarker(position, vehicleId) {
         icon    : 'images/map_marker.png'
     });
     marker.addListener('click', function() {
-        gMap.setZoom(8);
+        gMap.setZoom(17);
         gMap.setCenter(marker.getPosition());
         showVehicleData(vehicleId);
     });
