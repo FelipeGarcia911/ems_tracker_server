@@ -93,7 +93,7 @@ function onDocumentReady() {
         showBody();
         initSocketConnection();
         initAdminLocation();
-        initVehicleSimulation();
+        //initVehicleSimulation();
     }else {
         hideBody();
         navigateToLogin()
