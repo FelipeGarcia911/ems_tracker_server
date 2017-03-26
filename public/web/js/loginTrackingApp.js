@@ -6,6 +6,7 @@ var constants = {
     ADMIN_COOKIE_REMEMBER_TIME  : (ADMIN_COOKIE_DAYS * 24 * 60 * 60 * 1000),
     ADMIN_COOKIE_TEMP_TIME      : (ADMIN_COOKIE_SEG * 1000),
 
+    // URL Server
     URL_SERVER                  : './api/',
 
     // Api Methods

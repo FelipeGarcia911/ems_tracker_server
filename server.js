@@ -22,8 +22,12 @@ var port    = process.env.PORT || 3000;
 //Connection to DB
 // -------------------------------------------------------------------------------------------------------------------
 mongoose = mongoose.connect(constants.MONGO_DB_URI_01, function(err, res) {
-    if(err) throw err;
-    console.log('Connected to Database ');
+	if(err) throw err;
+	console.log('Connected to Database ');
+    // Start server
+    http.listen(port, function() {
+    	console.log('Our app is running on http://localhost:' + port);
+    });
 });
 // -------------------------------------------------------------------------------------------------------------------
 
@@ -67,11 +71,4 @@ var admin_routes = require('./app/routers/AdminRouter')(express, AdminController
 app.use('/api', admin_routes);
 // -------------------------------------------------------------------------------------------------------------------
 
-// -------------------------------------------------------------------------------------------------------------------
-
-// Start server
-// -------------------------------------------------------------------------------------------------------------------
-http.listen(port, function() {
-    console.log('Our app is running on http://localhost:' + port);
-});
 // -------------------------------------------------------------------------------------------------------------------

@@ -1,111 +1,156 @@
 <html><head>
-        <link rel="icon" href="images/favicon.ico">
-        <title>Tracker - EMS Tracker</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdn.socket.io/socket.io-1.7.3.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-        <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        <link href="css/main.css" rel="stylesheet" type="text/css">
-        <script src="js/mainTrackingApp.js"></script>
-        <script src="js/navbar_controller.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgodg-yNFr9DyDab2a8sNWoKpKzQ5JUFI&amp;callback=initGoogleMap" async="" defer=""></script>
-    </head><body>
-        <div class="navbar">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse" style="border-color: #cccccc">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar" style="background-color: #ffffff"></span>
-                        <span class="icon-bar" style="background-color: #ffffff"></span>
-                        <span class="icon-bar" style="background-color: #ffffff"></span>
-                    </button>
-                    <a class="navbar-brand">EMS Tracker</a>
-                </div>
-                <div class="collapse navbar-collapse" id="navbar-ex-collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li id="navHome">
-                            <a><i class="fa fa-fw fa-home"></i>Home</a>
-                        </li>
-                        <li class="active" id="navTrackingApp">
-                            <a><i class="fa fa-fw fa-automobile"></i>&nbsp;Aplicación Web<br></a>
-                        </li>
-                        <li id="navAbout">
-                            <a><i class="fa fa-fw fa-info-circle"></i>Acerce de<br></a>
-                        </li>
-                        <li id="navSignOut">
-                            <a><i class="fa fa-fw -circle fa-sign-out"></i>Cerrar Sesión<br></a>
-                        </li>
-                    </ul>
-                    <p class="navbar-text navbar-right">Un producto de
-                        <a href="#" class="navbar-link">CODIGORIGINAL</a>
-                    </p>
-                </div>
-            </div>
+    <link rel="icon" href="images/favicon.ico">
+    <title>Tracker - EMS Tracker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.socket.io/socket.io-1.7.3.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <script src="js/mainTrackingApp.js"></script>
+    <script src="js/navbar_controller.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgodg-yNFr9DyDab2a8sNWoKpKzQ5JUFI&amp;callback=initGoogleMap" async="" defer=""></script>
+  </head><body>
+    <div class="navbar">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse" style="border-color: #cccccc">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar" style="background-color: #ffffff"></span>
+            <span class="icon-bar" style="background-color: #ffffff"></span>
+            <span class="icon-bar" style="background-color: #ffffff"></span>
+          </button>
+          <a class="navbar-brand">EMS Tracker</a>
         </div>
-        <div class="section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1 class="text-left">
-                            <i class="fa fa-fw fa-automobile"></i>&nbsp;Rastreo en Tiempo Real</h1>
-                    </div>
-                </div>
-            </div>
+        <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li id="navHome">
+              <a><i class="fa fa-fw fa-home"></i>Home</a>
+            </li>
+            <li class="active" id="navTrackingApp">
+              <a><i class="fa fa-fw fa-automobile"></i>&nbsp;Aplicación Web<br></a>
+            </li>
+            <li id="navAbout">
+              <a><i class="fa fa-fw fa-info-circle"></i>Acerce de<br></a>
+            </li>
+            <li id="navSignOut">
+              <a><i class="fa fa-fw -circle fa-sign-out"></i>Cerrar Sesión<br></a>
+            </li>
+          </ul>
+          <p class="navbar-text navbar-right">Un producto de
+            <a href="#" class="navbar-link">CODIGORIGINAL</a>
+          </p>
         </div>
-        <div class="section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <div class="col-md-12" id="googleMap" style="height: 600px;"></div>
-                    </div>
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="text-left">
+              <i class="fa fa-fw fa-automobile"></i>&nbsp;Rastreo en Tiempo Real</h1>
+          </div>
         </div>
-        <div class="section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1 class="text-muted">Tecnología de Google Maps Inc.</h1>
-                    </div>
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <div class="col-md-12" id="googleMap" style="height: 600px;"></div>
+          </div>
         </div>
-        <footer class="section section-primary">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h1>CODIGORIGINAL
-                            <br>
-                        </h1>
-                        <p>Desarrollo de aplicaciones en alto rendimiento</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <p class="text-info text-right">
-                            <br>
-                            <br>
-                        </p>
-                        <div class="row">
-                            <div class="col-md-12 hidden-lg hidden-md hidden-sm text-left">
-                                <a href="#"><i class="fa fa-3x fa-fw fa-instagram text-inverse"></i></a>
-                                <a href="#"><i class="fa fa-3x fa-fw fa-twitter text-inverse"></i></a>
-                                <a href="#"><i class="fa fa-3x fa-fw fa-facebook text-inverse"></i></a>
-                                <a href="#"><i class="fa fa-3x fa-fw fa-github text-inverse"></i></a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 hidden-xs text-right">
-                                <a href="#"><i class="fa fa-3x fa-fw fa-instagram text-inverse"></i></a>
-                                <a href="#"><i class="fa fa-3x fa-fw fa-twitter text-inverse"></i></a>
-                                <a href="#"><i class="fa fa-3x fa-fw fa-facebook text-inverse"></i></a>
-                                <a href="#"><i class="fa fa-3x fa-fw fa-github text-inverse"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="active progress progress-striped" id="progressBar" style="display: none">
+              <div class="progress-bar" role="progressbar" style="width: 100%;">Cargando....</div>
             </div>
-        </footer>
-    
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="text-muted">Tecnología de Google Maps Inc.</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fade modal" id="vehicleModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 class="modal-title text-warning" id="myModalLabel">
+              <i class="fa fa-star fa-fw"></i>Detalles del Vehículo</h3>
+          </div>
+          <div class="modal-body">
+            <div class="col-md-3 hidden-md hidden-sm hidden-xs text-center">
+              <div class="col-md-12">
+                <img src="https://ununsplash.imgix.net/photo-1413896235942-39c2eb7cd584?w=1024&amp;q=50&amp;fm=jpg&amp;s=82734c02c2c6a780dc31f24c54077dd6" class="center-block img-responsive img-thumbnail">
+              </div>
+            </div>
+            <div class="col-md-9">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <h4 class="text-primary">Nombre del Vehículo</h4>
+                  <div id="vehicleName">Nombre el Vehículo</div>
+                </li>
+                <li class="list-group-item">
+                  <h4 class="text-primary">Descripción del Vehículo</h4>
+                  <div id="vehicleDescription">Descripción del Vehículo</div>
+                </li>
+                <li class="list-group-item">
+                  <h4 class="text-primary">Dirección Actual</h4>
+                  <div id="vehicleAddress">Dirección en el GPS</div>
+                </li>
+              </ul>
+            </div>
+            <p>One fine body...</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="section section-primary">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6">
+            <h1>CODIGORIGINAL
+              <br>
+            </h1>
+            <p>Desarrollo de aplicaciones en alto rendimiento</p>
+          </div>
+          <div class="col-sm-6">
+            <p class="text-info text-right">
+              <br>
+              <br>
+            </p>
+            <div class="row">
+              <div class="col-md-12 hidden-lg hidden-md hidden-sm text-left">
+                <a href="#"><i class="fa fa-3x fa-fw fa-instagram text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-twitter text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-facebook text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-github text-inverse"></i></a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 hidden-xs text-right">
+                <a href="#"><i class="fa fa-3x fa-fw fa-instagram text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-twitter text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-facebook text-inverse"></i></a>
+                <a href="#"><i class="fa fa-3x fa-fw fa-github text-inverse"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  
 
 </body></html>

@@ -15,6 +15,8 @@ var constants = {
     OK_STATUS   : 200,
     FAIL_STATUS : 400,
     ADMIN_COOKIE_NAME : 'adminCookie',
+    URL_SERVER      : './api/',
+    VEHICLE_DATA    : 'vehicles/',
 };
 //--------------------------------------------------------------------------------------------------
 
@@ -52,6 +54,38 @@ function hideBody() {
     $('body').hide();
 }
 
+function setVehicleName(string) {
+    $('#vehicleName').html(string);
+}
+
+function setVehicleName(string) {
+    $('#vehicleName').html(string);
+}
+
+function setVehicleAddress(string) {
+    $('#vehicleAddress').html(string);
+}
+
+function setVehicleDescription(string) {
+    $('#vehicleDescription').html(string);
+}
+
+function showProgressBar(){
+    $('#progressBar').show();
+}
+
+function hideProgressBar(){
+    $('#progressBar').hide();
+}
+
+function showVehicleModal(){
+    $('#vehicleModal').modal('show');
+}
+
+function hideVehicleModal(){
+ $('#vehicleModal').modal('hide');
+}
+
 //Controller Functions
 //--------------------------------------------------------------------------------------------------
 function onDocumentReady() {
@@ -59,7 +93,7 @@ function onDocumentReady() {
         showBody();
         initSocketConnection();
         initAdminLocation();
-        //initVehicleSimulation();
+        initVehicleSimulation();
     }else {
         hideBody();
         navigateToLogin()
@@ -182,30 +216,21 @@ function initVehicleSimulation() {
     var updateInterval = 2000;
 
     setInterval(function () {
-        var vehicleId = 'WEEFVRTB%$RVERVETVFVD';
+        var vehicleId = '58d403a44add1048224ea005';
         var currentLatLong = getCurrentLatLonPosition();
         updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
 
-        var vehicleId = 'WEEFVRTB%$RVERVETSVDVSDVSDV';
+        var vehicleId = '58d403b94add1048224ea006';
         var currentLatLong = getCurrentLatLonPosition();
         updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
 
-        var vehicleId = 'WEEFVRTB%';
+        var vehicleId = '58d407e3e9d9894b29dd64cc';
         var currentLatLong = getCurrentLatLonPosition();
         updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
 
-        var vehicleId = 'WEEFVRTB%$RVERVETDVSDVSDV';
+        var vehicleId = '58d407e3e9d9894b29dd64cc';
         var currentLatLong = getCurrentLatLonPosition();
         updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
-
-        var vehicleId = 'WEEFVRTB%VERVETSVDVSDVSDV';
-        var currentLatLong = getCurrentLatLonPosition();
-        updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
-
-        var vehicleId = 'WEEFVRTB%$RVERVETSVSDVSDV';
-        var currentLatLong = getCurrentLatLonPosition();
-        updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
-
     },updateInterval);
 }
 
@@ -288,12 +313,64 @@ function createOnlineVehicle(id, latitude, longitude, gMap) {
     return onlineVehicle;
 }
 
-function createMarker(position, title) {
+function createMarker(position, vehicleId) {
     var marker = new google.maps.Marker({
         position: position,
-        title   : title
+        title   : vehicleId,
+        icon    : 'images/map_marker.png'
+    });
+    marker.addListener('click', function() {
+        gMap.setZoom(8);
+        gMap.setCenter(marker.getPosition());
+        showVehicleData(vehicleId);
     });
     return marker;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+function showVehicleData(vehicleId){
+    showProgressBar();
+    getVehicleData(vehicleId);
+}
+
+function getVehicleData(vehicleId) {
+    var url_conn = constants.URL_SERVER + constants.VEHICLE_DATA + vehicleId;
+    $.ajax({
+        type        : 'GET',
+        url         : url_conn,
+        dataType    : 'json',
+        contentType : 'application/json',
+        success: function (data, textStatus, jqXHR) {
+            onGetVehicleDataSuccess(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown){
+            console.log(jqXHR, textStatus, errorThrown);
+            onGetVehicleDataFailure(errorThrown);
+        }
+    });
+}
+
+function onGetVehicleDataSuccess(data) {
+    var vehicleData = data.data;
+    console.log(vehicleData)
+    onlineVehicles.forEach(function (onlineVehicle,index) {
+        if (onlineVehicle.getId() === vehicleData._id){
+            getAddressByLatLong(onlineVehicle.latitude, onlineVehicle.longitude);
+        }
+    });
+    showVehicleDataModal(vehicleData.name, vehicleData.description);
+}
+
+function onGetVehicleDataFailure(errorMessage) {
+    console.log("Error:"+errorMessage);
+}
+
+function showVehicleDataModal(vehicleName, vehicleDescripcion){
+    setVehicleName(vehicleName);
+    setVehicleDescription(vehicleDescripcion);
+    hideProgressBar();
+    showVehicleModal();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -326,6 +403,20 @@ function deleteCookie(cname) {
 
 function randomInRange(min, max) {
     return Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min);
+}
+
+function getAddressByLatLong(latitude, longitude){
+    var url_conn = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true&key=AIzaSyAgodg-yNFr9DyDab2a8sNWoKpKzQ5JUFI';
+    console.log(url_conn);
+    $.ajax({ 
+        url: url_conn,
+        success: function(data){
+            setVehicleAddress(data.results[0].formatted_address);
+       },
+       error: function(){
+        setVehicleAddress("Dirección no encontrada....");
+       }
+   });
 }
 //--------------------------------------------------------------------------------------------------
 
