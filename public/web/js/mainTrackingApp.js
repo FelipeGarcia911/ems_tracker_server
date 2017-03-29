@@ -2,6 +2,7 @@
 //--------------------------------------------------------------------------------------------------
 var gMap;
 var socket;
+var adminCookie;
 var onlineVehicles = [];
 //--------------------------------------------------------------------------------------------------
 
@@ -10,13 +11,27 @@ var onlineVehicles = [];
 var constants = {
     UPDATE_VEHICLE_POSITION_REQUEST  : "UPDATE_VEHICLE_POSITION_REQUEST",
     UPDATE_VEHICLE_POSITION_RESPONSE : "UPDATE_VEHICLE_POSITION_RESPONSE",
+
     GET_ALL_ONLINE_VEHICLES_POSITIONS_REQUEST : "GET_ALL_ONLINE_VEHICLES_POSITIONS_REQUEST",
     GET_ALL_ONLINE_VEHICLE_POSITIONS_RESPONSE : "GET_ALL_ONLINE_VEHICLE_POSITIONS_RESPONSE",
+
     OK_STATUS   : 200,
     FAIL_STATUS : 400,
+
+    UPDATE_TIME_INTERVAL : 2000,
+
     ADMIN_COOKIE_NAME : 'adminCookie',
+
     URL_SERVER      : './api/',
     VEHICLE_DATA    : 'vehicles/',
+
+    ONLINE_MARKER_ICON  : 'images/map_marker_online_small.png',
+    OFFLINE_MARKER_ICON : 'images/map_marker_offline_small.png',
+
+    // Vehicle Status
+    //Connection Status
+    ONLINE_STATUS       : "ONLINE",
+    OFFLINE_STATUS      : "OFFLINE",
 };
 //--------------------------------------------------------------------------------------------------
 
@@ -28,9 +43,26 @@ var constants = {
 //Init Script Functions
 //--------------------------------------------------------------------------------------------------
 function initGoogleMap() {
+    var map_latitude = 0.0;
+    var map_longitude = 0.0;
+    var map_zoom = 3;
+
+    adminCookie = getAdminCookie();
+    if (adminCookie !== null) {
+        if (adminCookie.map_latitude !== undefined) {
+            map_latitude = adminCookie.map_latitude;
+        }
+        if (adminCookie.map_longitude !== undefined) {
+            map_longitude = adminCookie.map_longitude;
+        }
+        if (adminCookie.map_zoom !== undefined) {
+            map_zoom = parseInt(adminCookie.map_zoom);
+        }
+    }
+
     var mapProp = {
-        center : new google.maps.LatLng(0.0,0.0),
-        zoom : 3
+        center : new google.maps.LatLng(map_latitude,map_longitude),
+        zoom : map_zoom
     };
     gMap= new google.maps.Map(document.getElementById("googleMap"),mapProp);
 }
@@ -83,18 +115,19 @@ function showVehicleModal(){
 }
 
 function hideVehicleModal(){
- $('#vehicleModal').modal('hide');
+    $('#vehicleModal').modal('hide');
 }
 
 //Controller Functions
 //--------------------------------------------------------------------------------------------------
 function onDocumentReady() {
-    if (checkUserAuth()){
+    if (checkUserAuth()) {
         showBody();
+        initSocketConnection();
         initSocketConnection();
         initAdminLocation();
         //initVehicleSimulation();
-    }else {
+    } else {
         hideBody();
         navigateToLogin()
     }
@@ -119,9 +152,6 @@ function checkUserAuth() {
 //--------------------------------------------------------------------------------------------------
 function initSocketConnection(){
     socket = io();
-    socket.on('new_message', function(msg){
-        alert(msg);
-    });
 }
 
 function sendSocketMessage(method,data) {
@@ -152,16 +182,15 @@ function newSocketMessage(method, data, status) {
 // Admin Functions
 //--------------------------------------------------------------------------------------------------
 function initAdminLocation() {
-    var updateInterval = 2000;
     setInterval(function () {
-        getVehiclePositions(constants.ADMIN_TOKEN);
-    },updateInterval);
+        getVehiclePositions(adminCookie.id);
+    },constants.UPDATE_TIME_INTERVAL);
     listenAdminSocketMethods();
 }
 
-function getVehiclePositions(adminToken) {
+function getVehiclePositions(adminId) {
     var data = {
-        token : adminToken
+        adminId : adminId
     };
     var request = newSocketMessage(constants.GET_ALL_ONLINE_VEHICLES_POSITIONS_REQUEST,data,constants.OK_STATUS);
     var socketResponse = sendSocketMessage(request.method,request);
@@ -174,26 +203,39 @@ function listenAdminSocketMethods() {
 }
 
 function onOnlineVehiclesResponse(data) {
+    console.log(data);
+
     var responseData = data.data;
-    var onlineVehiclesCount = responseData.onlineCount;
-    var onlineVehicleArray = responseData.vehiclesData;
-    console.log(onlineVehicleArray);
-    onlineVehicleArray.forEach(function (vehicle,index) {
-        var newVehicle = createOnlineVehicle(vehicle.id, vehicle.latitude, vehicle.longitude,gMap);
-        var isUpdated = updateOnlineVehicle(newVehicle);
-        if (!isUpdated){
+    var newOnlineVehiclesArray = responseData.vehiclesData;
+
+    newOnlineVehiclesArray.forEach(function (vehicle, index) {
+        var currentOnlineVehicle = getVehicleById(vehicle.id);
+        if (currentOnlineVehicle !== false){
+            currentOnlineVehicle.updateStatus(vehicle.onlineStatus);
+            currentOnlineVehicle.updatePosition(vehicle.latitude, vehicle.longitude);
+        }else{
+            var newVehicle = createOnlineVehicle(vehicle.id, vehicle.latitude, vehicle.longitude,gMap, constants.ONLINE_STATUS);
             addOnlineVehicle(newVehicle);
             newVehicle.showMarker();
         }
     });
-    updateLocalVehicles(onlineVehicleArray);
+    updateLocalVehicles(newOnlineVehiclesArray);
+}
+
+function getVehicleById(id) {
+    var response = false;
+    onlineVehicles.forEach(function (vehicle, index) {
+        if (vehicle.getId() === id){
+            response = vehicle;
+        }
+    });
+    return response;
 }
 
 function updateLocalVehicles(onlineVehicleArray){
     onlineVehicles.forEach(function (vehicle,index) {
         var inArray = isVehicleInArray(onlineVehicleArray, vehicle.getId());
         if (!inArray) {
-        	console.log('Not Found!');
             deleteOnlineVehicle(vehicle.getId());
         }
     });
@@ -217,7 +259,7 @@ function initVehicleSimulation() {
     var updateInterval = 2000;
 
     setInterval(function () {
-        
+
         var vehicleId = '58d403b94add1048224ea006';
         var currentLatLong = getCurrentLatLonPosition();
         updatePosition(vehicleId,currentLatLong.latitude,currentLatLong.longitude);
@@ -262,7 +304,6 @@ function deleteOnlineVehicle(id) {
         if (onlineVehicle.getId() === id){
             onlineVehicle.hideMarker();
             onlineVehicles.splice(index,1);
-            console.log("DeleteVehicle",onlineVehicle.id);
         }
     });
 }
@@ -278,7 +319,7 @@ function updateOnlineVehicle(newOnlineVehicle) {
     return isExecuted;
 }
 
-function createOnlineVehicle(id, latitude, longitude, gMap) {
+function createOnlineVehicle(id, latitude, longitude, gMap, status) {
     var myLatlng = new google.maps.LatLng(latitude,longitude);
     var onlineVehicle = {
         id          : id,
@@ -287,6 +328,7 @@ function createOnlineVehicle(id, latitude, longitude, gMap) {
         latlong     : myLatlng,
         marker      : createMarker(myLatlng, id),
         gMap        : gMap,
+        status      : status,
         getId       : function () {
             return this.id;
         },
@@ -296,6 +338,17 @@ function createOnlineVehicle(id, latitude, longitude, gMap) {
             this.latlong    = new google.maps.LatLng(this.latitude,this.longitude);
             if (this.marker !== null) {
                 this.marker.setPosition(this.latlong);
+            }
+        },
+        updateStatus : function (onlineStatus) {
+            if(onlineStatus === constants.ONLINE_STATUS) {
+                if (this.marker !== null) {
+                    this.marker.setIcon(constants.ONLINE_MARKER_ICON);
+                }
+            }else if(onlineStatus === constants.OFFLINE_STATUS){
+                if (this.marker !== null){
+                    this.marker.setIcon(constants.OFFLINE_MARKER_ICON);
+                }
             }
         },
         showMarker : function () {
@@ -316,7 +369,7 @@ function createMarker(position, vehicleId) {
     var marker = new google.maps.Marker({
         position: position,
         title   : vehicleId,
-        icon    : 'images/map_marker.png'
+        icon    : constants.ONLINE_MARKER_ICON
     });
     marker.addListener('click', function() {
         gMap.setZoom(17);
@@ -374,7 +427,7 @@ function showVehicleDataModal(vehicleName, vehicleDescripcion){
 
 //--------------------------------------------------------------------------------------------------
 
-// Other Functions
+// Cookie Functions
 //--------------------------------------------------------------------------------------------------
 function checkCookie(cname) {
     var cookie = getCookie(cname);
@@ -396,9 +449,22 @@ function getCookie(cname) {
     return "";
 }
 
+function getAdminCookie() {
+    var response = null;
+    if (checkCookie(constants.ADMIN_COOKIE_NAME)){
+        response = JSON.parse(getCookie(constants.ADMIN_COOKIE_NAME));
+    }
+    return response;
+}
+
 function deleteCookie(cname) {
     document.cookie = cname + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
+
+//--------------------------------------------------------------------------------------------------
+
+// Other Functions
+//--------------------------------------------------------------------------------------------------
 
 function randomInRange(min, max) {
     return Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min);
@@ -407,15 +473,15 @@ function randomInRange(min, max) {
 function getAddressByLatLong(latitude, longitude){
     var url_conn = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true&key=AIzaSyAgodg-yNFr9DyDab2a8sNWoKpKzQ5JUFI';
     console.log(url_conn);
-    $.ajax({ 
+    $.ajax({
         url: url_conn,
         success: function(data){
             setVehicleAddress(data.results[0].formatted_address);
-       },
-       error: function(){
-        setVehicleAddress("Dirección no encontrada....");
-       }
-   });
+        },
+        error: function(){
+            setVehicleAddress("Dirección no encontrada....");
+        }
+    });
 }
 //--------------------------------------------------------------------------------------------------
 

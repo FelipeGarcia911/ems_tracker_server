@@ -18,7 +18,8 @@
     "mongoose": "latest",
     "method-override": "latest",
     "forever" : "latest",
-    "node-promise": "latest"
+    "node-promise": "latest",
+    "mongo-query-generator": "latest"
   },
   "keywords": [
     "nodejs",

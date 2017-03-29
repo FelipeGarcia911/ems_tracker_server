@@ -1,4 +1,5 @@
 var mongoose        = require('mongoose');
+var Vehicle         = mongoose.model('Vehicle');
 var Admin           = mongoose.model('Admin');
 var ApiResponseObj  = require('../../objects/ApiResponseObj');
 
@@ -52,6 +53,10 @@ exports.addAdmin = function(req, res) {
                 user:           req.body.user,
                 password:       req.body.password,
                 name: 		    req.body.name,
+                description:    req.body.description,
+                map_latitude: 	req.body.map_latitude,
+                map_longitude:  req.body.map_longitude,
+                map_zoom: 		req.body.map_zoom
             });
 
             newAdmin.save(function(err, admin) {
@@ -74,10 +79,13 @@ exports.addAdmin = function(req, res) {
 exports.updateAdmin = function(req, res) {
     var response;
     Admin.findById(req.params.id, function(err, admin) {
-        admin.user        = req.body.user,
-            admin.password    = req.body.password,
-            admin.name        = req.body.name;
-        admin.description = req.body.description;
+        user          = req.body.user;
+        password      = req.body.password;
+        name          = req.body.name;
+        description   = req.body.description;
+        map_latitude  = req.body.map_latitude;
+        map_longitude = req.body.map_longitude;
+        map_zoom      = req.body.map_zoom;
 
         admin.save(function(err) {
             if(err){

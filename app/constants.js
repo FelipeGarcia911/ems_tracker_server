@@ -1,7 +1,11 @@
-var mongoDB_01_User = 'admin';
-var mongoDB_01_Pass = 'ems_tracker';
+var mongodb_user        = "admin";
+var mongodb_password    = "ems_tracker";
 
 module.exports = {
+
+    //Socket Configurations
+    HEART_BEAT_TIMEOUT : 2000,
+    HEART_BEAT_INTERVAL: 500,
 
     // Vehicle Request
     GET_ALL_ONLINE_VEHICLES_POSITIONS_REQUEST : "GET_ALL_ONLINE_VEHICLES_POSITIONS_REQUEST",
@@ -16,9 +20,16 @@ module.exports = {
     FAIL_STATUS : 400,
 
     // Vehicle Status
-    ONLINE_STATUS  : 'ONLINE',
-    OFFLINE_STATUS : 'OFFLINE',
+
+    //Login Status
+    LOGIN_STATUS : 'LOGIN',
+    LOGOUT_STATUS: 'LOGOUT',
+
+    //Connection Status
+    ONLINE_STATUS       : "ONLINE",
+    OFFLINE_STATUS      : "OFFLINE",
 
     //MongoDB Constants
-    MONGO_DB_URI_01 : "mongodb://"+mongoDB_01_User+":"+mongoDB_01_Pass+"@ds060369.mlab.com:60369/ems_tracker_vehicles",
+    MONGO_DB_PROD_URL : "mongodb://"+mongodb_user+":"+mongodb_password+"@ds060369.mlab.com:60369/ems_tracker_vehicles",
+    MONGO_DB_DEV_URL : "mongodb://"+mongodb_user+":"+mongodb_password+"@ds060369.mlab.com:60369/ems_tracker_dev",
 };

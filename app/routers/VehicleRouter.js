@@ -14,6 +14,9 @@ module.exports = function(express, VehicleController){
     app.route('/vehicles/login')
         .post(VehicleController.loginVehicle);
 
+    app.route('/vehicles/logout')
+        .post(VehicleController.logoutVehicle);
+
 
     return app;
 };

@@ -1,3 +1,4 @@
+var constants         = require('../constants');
 module.exports = function(mongoose) {
 
     var vehicleSchema = new mongoose.Schema({
@@ -7,7 +8,9 @@ module.exports = function(mongoose) {
         description: 	{ type: String, default: '' },
         latitude:  	    { type: String, default: '0.0' },
         longitude: 	    { type: String, default: '0.0' },
-        isOnline:       { type: Boolean, default: false },
+        adminId:        { type: String, default: '' },
+        loginStatus:    { type: String, default: constants.OFFLINE_STATUS },
+        onlineStatus:   { type: String, default: constants.OFFLINE_STATUS },
         dateCreated:    { type: Date, default: Date.now },
         dateUpdated:    { type: Date, default: Date.now },
         socketId: 	    { type: String, default: '' }

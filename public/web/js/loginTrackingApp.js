@@ -156,10 +156,8 @@ function onLoginSuccessResponse(data, rememberMe) {
         var adminData = data.data;
         if (rememberMe){
             saveAdminCookie(adminData);
-            console.log("Remember");
         }else{
             saveAdminTempCookie(adminData);
-            console.log("Temp");
         }
         onSuccessLogin();
     }else if (status === constants.FAILURE_STATUS){
@@ -186,23 +184,23 @@ function createJSONLoginRequest(username, password){
 //Cookie Functions
 //----------------------------------------------------------------------------------------------------------------------
 function saveAdminCookie(adminData) {
-    var adminId = adminData._id;
-    var adminToken = adminData._id;
-    var adminCookie = createJSONToAdminCookie(adminId, adminToken);
+    var adminCookie = createJSONToAdminCookie(adminData);
     setCookie(constants.ADMIN_COOKIE_NAME, adminCookie, constants.ADMIN_COOKIE_REMEMBER_TIME);
 }
 
 function saveAdminTempCookie(adminData) {
-    var adminId = adminData._id;
-    var adminToken = adminData._id;
-    var adminCookie = createJSONToAdminCookie(adminId, adminToken);
+    var adminCookie = createJSONToAdminCookie(adminData);
     setCookie(constants.ADMIN_COOKIE_NAME, adminCookie, constants.ADMIN_COOKIE_TEMP_TIME);
 }
 
-function createJSONToAdminCookie(adminId, adminToken) {
+function createJSONToAdminCookie(adminData) {
     var adminCookie = {
-        id : adminId,
-        token : adminToken
+        id              : adminData._id,
+        name            : adminData.name,
+        map_latitude    : adminData.map_latitude,
+        map_longitude   : adminData.map_longitude,
+        map_zoom        : adminData.map_zoom,
+        token           : adminData.token
     };
     return JSON.stringify(adminCookie);
 }
@@ -215,7 +213,7 @@ function setCookie(cname, cvalue, time) {
 }
 
 function getCookie(cname) {
-    var name = cname + '=';
+    var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];

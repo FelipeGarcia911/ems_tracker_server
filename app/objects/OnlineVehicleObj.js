@@ -1,7 +1,9 @@
-function OnlineVehicle(id, latitude, longitude, socketId, status) {
+var constants = require('../constants');
+function OnlineVehicle(id, latitude, longitude, adminId, socketId, status) {
     this.id         = id;
     this.latitude   = latitude;
     this.longitude  = longitude;
+    this.adminId    = adminId;
     this.socketId   = socketId;
     this.status     = status;
 
@@ -21,13 +23,19 @@ function OnlineVehicle(id, latitude, longitude, socketId, status) {
         this.longitude = longitude;
     };
 
-    OnlineVehicle.prototype.setStatus = function setStatus(status) {
-        this.status = status;
+    OnlineVehicle.prototype.setOnlineStatus = function setOnlineStatus() {
+        this.status = constants.ONLINE_STATUS;
+    };
+
+    OnlineVehicle.prototype.setOfflineStatus = function setOfflineStatus() {
+        this.status = constants.OFFLINE_STATUS;
     };
 
     OnlineVehicle.prototype.getStatus = function getStatus() {
         return this.status;
     };
+
+
 }
 
 module.exports = OnlineVehicle;
