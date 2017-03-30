@@ -184,7 +184,7 @@ function sendSocketMessage(method,data) {
 }
 
 function newSocketMessage(method, data, status) {
-    var socketMessageTemplate = {
+    return {
         method: method,
         data: data,
         message: 'Response from WebApp',
@@ -195,7 +195,6 @@ function newSocketMessage(method, data, status) {
             this.data = data;
         }
     };
-    return socketMessageTemplate;
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -303,11 +302,10 @@ function updatePosition(id, latitude, longitude){
 }
 
 function getCurrentLatLonPosition() {
-    var latlonPosition = {
-        latitude  : randomInRange(0,50),
-        longitude : randomInRange(0,50),
+    return {
+        latitude: randomInRange(0, 50),
+        longitude: randomInRange(0, 50),
     };
-    return latlonPosition;
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -339,48 +337,47 @@ function updateOnlineVehicle(newOnlineVehicle) {
 
 function createOnlineVehicle(id, latitude, longitude, gMap, status) {
     var myLatlng = new google.maps.LatLng(latitude,longitude);
-    var onlineVehicle = {
-        id          : id,
-        latitude    : latitude,
-        longitude   : longitude,
-        latlong     : myLatlng,
-        marker      : createMarker(myLatlng, id),
-        gMap        : gMap,
-        status      : status,
-        getId       : function () {
+    return {
+        id: id,
+        latitude: latitude,
+        longitude: longitude,
+        latlong: myLatlng,
+        marker: createMarker(myLatlng, id),
+        gMap: gMap,
+        status: status,
+        getId: function () {
             return this.id;
         },
-        updatePosition : function (latitude, longitude) {
-            this.latitude   = latitude;
-            this.longitude  = longitude;
-            this.latlong    = new google.maps.LatLng(this.latitude,this.longitude);
+        updatePosition: function (latitude, longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.latlong = new google.maps.LatLng(this.latitude, this.longitude);
             if (this.marker !== null) {
                 this.marker.setPosition(this.latlong);
             }
         },
-        updateStatus : function (onlineStatus) {
-            if(onlineStatus === constants.ONLINE_STATUS) {
+        updateStatus: function (onlineStatus) {
+            if (onlineStatus === constants.ONLINE_STATUS) {
                 if (this.marker !== null) {
                     this.marker.setIcon(constants.ONLINE_MARKER_ICON);
                 }
-            }else if(onlineStatus === constants.OFFLINE_STATUS){
-                if (this.marker !== null){
+            } else if (onlineStatus === constants.OFFLINE_STATUS) {
+                if (this.marker !== null) {
                     this.marker.setIcon(constants.OFFLINE_MARKER_ICON);
                 }
             }
         },
-        showMarker : function () {
-            if (this.gMap !== null && this.marker !== null){
+        showMarker: function () {
+            if (this.gMap !== null && this.marker !== null) {
                 this.marker.setMap(this.gMap);
             }
         },
-        hideMarker : function () {
-            if (this.marker !== null){
+        hideMarker: function () {
+            if (this.marker !== null) {
                 this.marker.setMap(null);
             }
         }
     };
-    return onlineVehicle;
 }
 
 function createMarker(position, vehicleId) {

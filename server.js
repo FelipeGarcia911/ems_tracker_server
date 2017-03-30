@@ -24,7 +24,7 @@ var port    = process.env.PORT || 3000;
 
 //Connection to DB
 // -------------------------------------------------------------------------------------------------------------------
-mongoose = mongoose.connect(constants.MONGO_DB_DEV_URL, function(err, res) {
+mongoose = mongoose.connect(constants.MONGO_DB_PROD_URL, function(err, res) {
     if(err) throw err;
     console.log('Connected to Database ');
 

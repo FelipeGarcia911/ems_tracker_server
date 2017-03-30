@@ -1,5 +1,5 @@
 var mongodb_user        = "admin";
-var mongodb_password    = "ems_tracker";
+var mongodb_password    = "ems_tracker_admin";
 
 module.exports = {
 
@@ -30,6 +30,6 @@ module.exports = {
     OFFLINE_STATUS      : "OFFLINE",
 
     //MongoDB Constants
-    MONGO_DB_PROD_URL : "mongodb://"+mongodb_user+":"+mongodb_password+"@ds060369.mlab.com:60369/ems_tracker_vehicles",
-    MONGO_DB_DEV_URL : "mongodb://"+mongodb_user+":"+mongodb_password+"@ds060369.mlab.com:60369/ems_tracker_dev",
+    MONGO_DB_PROD_URL : "mongodb://"+mongodb_user+":"+mongodb_password+"@ds060369.mlab.com:60369/ems_tracker_prod_db",
+    MONGO_DB_DEV_URL  : "mongodb://"+mongodb_user+":"+mongodb_password+"@ds060649.mlab.com:60649/ems_tracker_dev_db",
 };
