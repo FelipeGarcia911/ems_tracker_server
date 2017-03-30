@@ -60,11 +60,11 @@ function initGoogleMap() {
         }
     }
 
-    var mapProp = {
-        center : new google.maps.LatLng(map_latitude,map_longitude),
-        zoom : map_zoom
-    };
-    gMap= new google.maps.Map(document.getElementById("googleMap"),mapProp);
+    gMap= new google.maps.Map(
+        document.getElementById("googleMap"), {
+            center : new google.maps.LatLng(map_latitude, map_longitude),
+            zoom   : map_zoom
+        });
 }
 // -------------------------------------------------------------------------------------
 
@@ -102,6 +102,22 @@ function setVehicleDescription(string) {
     $('#vehicleDescription').html(string);
 }
 
+function showMessage(message) {
+    $('#alertText').html(message);
+    showAlertDialog();
+    setTimeout(function () {
+        hideAlertDialog();
+    },3000)
+}
+
+function showAlertDialog() {
+    $('#alertDialog').show();
+}
+
+function hideAlertDialog() {
+    $('#alertDialog').hide();
+}
+
 function showProgressBar(){
     $('#progressBar').show();
 }
@@ -131,6 +147,10 @@ function onDocumentReady() {
         hideBody();
         navigateToLogin()
     }
+
+    $( '#closeAlertDialogButton' ).click(function() {
+        hideAlertDialog();
+    });
 }
 
 function onNavSignOutButtonClick() {
@@ -203,20 +223,18 @@ function listenAdminSocketMethods() {
 }
 
 function onOnlineVehiclesResponse(data) {
-    console.log(data);
-
     var responseData = data.data;
     var newOnlineVehiclesArray = responseData.vehiclesData;
 
     newOnlineVehiclesArray.forEach(function (vehicle, index) {
-        var currentOnlineVehicle = getVehicleById(vehicle.id);
+        var currentOnlineVehicle = getVehicleById(vehicle._id);
         if (currentOnlineVehicle !== false){
             currentOnlineVehicle.updateStatus(vehicle.onlineStatus);
             currentOnlineVehicle.updatePosition(vehicle.latitude, vehicle.longitude);
         }else{
-            var newVehicle = createOnlineVehicle(vehicle.id, vehicle.latitude, vehicle.longitude,gMap, constants.ONLINE_STATUS);
-            addOnlineVehicle(newVehicle);
+            var newVehicle = createOnlineVehicle(vehicle._id, vehicle.latitude, vehicle.longitude,gMap, constants.ONLINE_STATUS);
             newVehicle.showMarker();
+            addOnlineVehicle(newVehicle);
         }
     });
     updateLocalVehicles(newOnlineVehiclesArray);
@@ -233,18 +251,18 @@ function getVehicleById(id) {
 }
 
 function updateLocalVehicles(onlineVehicleArray){
-    onlineVehicles.forEach(function (vehicle,index) {
-        var inArray = isVehicleInArray(onlineVehicleArray, vehicle.getId());
+    onlineVehicles.forEach(function (vehicle, index) {
+        var inArray = isVehicleInServerArray(onlineVehicleArray, vehicle.getId());
         if (!inArray) {
             deleteOnlineVehicle(vehicle.getId());
         }
     });
 }
 
-function isVehicleInArray(vehicleArray, vehicleId) {
+function isVehicleInServerArray(vehicleArray, vehicleId) {
     var isExecuted = false;
     vehicleArray.forEach(function (vehicle, index) {
-        if (vehicle.id === vehicleId) {
+        if (vehicle._id === vehicleId) {
             isExecuted = true;
         }
     });
@@ -383,10 +401,17 @@ function createMarker(position, vehicleId) {
 
 function showVehicleData(vehicleId){
     showProgressBar();
-    getVehicleData(vehicleId);
+    getVehicleData(vehicleId, function (data, error) {
+        hideProgressBar();
+        if (data !== null){
+            onGetVehicleDataSuccess(data)
+        }else{
+            onGetVehicleDataFailure(error);
+        }
+    });
 }
 
-function getVehicleData(vehicleId) {
+function getVehicleData(vehicleId, callback) {
     var url_conn = constants.URL_SERVER + constants.VEHICLE_DATA + vehicleId;
     $.ajax({
         type        : 'GET',
@@ -394,33 +419,45 @@ function getVehicleData(vehicleId) {
         dataType    : 'json',
         contentType : 'application/json',
         success: function (data, textStatus, jqXHR) {
-            onGetVehicleDataSuccess(data);
+            if (data.status === constants.OK_STATUS){
+                callback(data, null);
+            }else{
+                callback(null, "Error de Servidor");
+            }
         },
         error: function (jqXHR, textStatus, errorThrown){
             console.log(jqXHR, textStatus, errorThrown);
-            onGetVehicleDataFailure(errorThrown);
+            callback(null, "Error: "+errorThrown);
         }
     });
 }
 
 function onGetVehicleDataSuccess(data) {
     var vehicleData = data.data;
-    console.log(vehicleData)
     onlineVehicles.forEach(function (onlineVehicle,index) {
         if (onlineVehicle.getId() === vehicleData._id){
-            getAddressByLatLong(onlineVehicle.latitude, onlineVehicle.longitude);
+            getAddressByLatLong(onlineVehicle.latitude, onlineVehicle.longitude, function (address, err) {
+                var googleAddress;
+                if (address !== null){
+                    googleAddress = address;
+                }else{
+                    googleAddress = 'Dirección no encontrada.';
+                }
+                showVehicleDataModal(vehicleData.name, vehicleData.description, googleAddress);
+            });
         }
     });
-    showVehicleDataModal(vehicleData.name, vehicleData.description);
 }
 
 function onGetVehicleDataFailure(errorMessage) {
-    console.log("Error:"+errorMessage);
+    showMessage("Error obteniendo información: "+errorMessage);
 }
 
-function showVehicleDataModal(vehicleName, vehicleDescripcion){
+function showVehicleDataModal(vehicleName, vehicleDescription, vehicleAddress){
     setVehicleName(vehicleName);
-    setVehicleDescription(vehicleDescripcion);
+    setVehicleDescription(vehicleDescription);
+    setVehicleAddress(vehicleAddress);
+
     hideProgressBar();
     showVehicleModal();
 }
@@ -439,10 +476,10 @@ function getCookie(cname) {
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) == ' ') {
+        while (c.charAt(0) === ' ') {
             c = c.substring(1);
         }
-        if (c.indexOf(name) == 0) {
+        if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
     }
@@ -470,16 +507,15 @@ function randomInRange(min, max) {
     return Math.random() < 0.5 ? ((1-Math.random()) * (max-min) + min) : (Math.random() * (max-min) + min);
 }
 
-function getAddressByLatLong(latitude, longitude){
+function getAddressByLatLong(latitude, longitude, callback){
     var url_conn = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+latitude+','+longitude+'&sensor=true&key=AIzaSyAgodg-yNFr9DyDab2a8sNWoKpKzQ5JUFI';
-    console.log(url_conn);
     $.ajax({
         url: url_conn,
         success: function(data){
-            setVehicleAddress(data.results[0].formatted_address);
+            callback(data.results[0].formatted_address);
         },
         error: function(){
-            setVehicleAddress("Dirección no encontrada....");
+            callback(null);
         }
     });
 }

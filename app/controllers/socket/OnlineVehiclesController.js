@@ -40,14 +40,7 @@ exports.handleVehicleDisconnect = function (socketId) {
             vehicle.socketId = '';
             vehicle.onlineStatus = constants.OFFLINE_STATUS;
             vehicle.save(function (err, vehicle) {
-                if (err) {
-                    console.log('handleVehicleDisconnect', 'Error Saving: ' + err);
-                } else {
-                    console.log('handleVehicleDisconnect', 'Success');
-                }
             });
-        }else{
-            console.log('handleVehicleDisconnect', 'Vehículo no encontrado');
         }
     });
 };

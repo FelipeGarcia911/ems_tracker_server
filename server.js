@@ -57,8 +57,8 @@ app.use('/', web_page_routes);
 var adminModel        = require('./app/models/admin')(mongoose);
 var vehicleModel      = require('./app/models/vehicle')(mongoose);
 
-var VehicleController = require('./app/controllers/api/VehiclesApiController');
-var AdminController   = require('./app/controllers/api/AdminApiController');
+var VehicleController = require('./app/controllers/api/VehiclesController');
+var AdminController   = require('./app/controllers/api/AdminController');
 // -------------------------------------------------------------------------------------------------------------------
 
 // API - Route
@@ -72,5 +72,5 @@ app.use('/api', admin_routes);
 
 // Socket - Route
 // -------------------------------------------------------------------------------------------------------------------
-var socket_route = require('./app/controllers/socket/SocketIOController')(io);
+var socket_route = require('./app/controllers/socket/SocketController')(io);
 // -------------------------------------------------------------------------------------------------------------------

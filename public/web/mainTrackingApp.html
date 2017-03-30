@@ -63,8 +63,12 @@
     </div>
     <div class="row">
       <div class="col-md-12">
+        <div class="alert alert-danger alert-dismissable" id="alertDialog" style="display: none">
+          <button contenteditable="false" type="button" class="close" aria-hidden="true" id="closeAlertDialogButton">×</button>
+          <div id="alertText"></div>
+        </div>
         <div class="active progress progress-striped" id="progressBar" style="display: none">
-          <div class="progress-bar" role="progressbar" style="width: 100%;">Cargando....</div>
+          <div class="progress-bar" role="progressbar" style="width: 100%;">Cargando...</div>
         </div>
       </div>
     </div>
@@ -97,15 +101,15 @@
           <ul class="list-group">
             <li class="list-group-item">
               <h4 class="text-primary">Nombre del Vehículo</h4>
-              <div id="vehicleName">Nombre el Vehículo</div>
+              <div id="vehicleName"></div>
             </li>
             <li class="list-group-item">
               <h4 class="text-primary">Descripción del Vehículo</h4>
-              <div id="vehicleDescription">Descripción del Vehículo</div>
+              <div id="vehicleDescription"></div>
             </li>
             <li class="list-group-item">
               <h4 class="text-primary">Dirección Actual</h4>
-              <div id="vehicleAddress">Dirección en el GPS</div>
+              <div id="vehicleAddress"></div>
             </li>
           </ul>
         </div>
